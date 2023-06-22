@@ -1,0 +1,55 @@
+name: GitHub Pages Workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Set Environment Variable
+        run: echo "NEXT_PUBLIC_API_KEY=${{ secrets.NEXT_PUBLIC_API_KEY }}" >> $GITHUB_ENV
+        with: # Set the secret as an input
+          NEXT_PUBLIC_API_KEY: ${{ secrets.NEXT_PUBLIC_API_KEY }}
+        env: # Or as an environment variable
+          NEXT_PUBLIC_API_KEY: ${{ secrets.NEXT_PUBLIC_API_KEY }}
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build
+
+      - name: Display GitHub Pages URL
+        run: |
+          echo "GitHub Pages URL: https://${{ github.repository_owner }}.github.io/${{ github.repository_name }}/"
+
+      - name: Set Deployed Link
+        id: deployed-link
+        run: echo "::set-output name=deployed_link::https://${{ github.repository_owner }}.github.io/${{ github.repository_name }}/"
+
+  show-link:
+    needs: build-deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Display Deployed Link
+        run: |
+          echo "Deployed Link: ${{ needs.build-deploy.outputs.deployed_link }}"
