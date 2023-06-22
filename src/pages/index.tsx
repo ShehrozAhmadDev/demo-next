@@ -6,7 +6,11 @@ export default function Home() {
   const [value, setValue] = useState<string | undefined>("");
   const printFromEnv = () => {
     console.log("Hello World===>", process.env.NEXT_PUBLIC_API_KEY);
-    setValue(process.env.NEXT_PUBLIC_API_KEY);
+    if (process.env.NEXT_PUBLIC_API_KEY === "sk_hello_world") {
+      setValue("Hello World");
+    } else {
+      setValue("GoodBye World");
+    }
   };
 
   return (
