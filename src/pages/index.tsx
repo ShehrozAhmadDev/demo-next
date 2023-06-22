@@ -16,7 +16,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col h-[100vh] justify-center items-center">
-      <h1>Hello World!</h1>
+      <h1>Hello World1!</h1>
       <button
         className="bg-[#00ff] text-[#ffffff] p-[20px]"
         onClick={printFromEnv}
