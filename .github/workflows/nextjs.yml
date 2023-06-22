@@ -74,7 +74,7 @@ jobs:
       - name: Build with Next.js
         run: |
           ${{ steps.detect-package-manager.outputs.runner }} next build
-          echo "NEXT_PUBLIC_API_KEY=${{ secrets.NEXT_PUBLIC_API_KEY }}" >> $GITHUB_ENV
+          echo "NEXT_PUBLIC_API_KEY=${{ env.NEXT_PUBLIC_API_KEY }}" >> $GITHUB_ENV
       - name: Static HTML export with Next.js
         run: ${{ steps.detect-package-manager.outputs.runner }} next export
       - name: Upload artifact
@@ -92,4 +92,6 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
+        env:
+          NEXT_PUBLIC_API_KEY: ${{ needs.build.outputs.NEXT_PUBLIC_API_KEY }}
         uses: actions/deploy-pages@v2
